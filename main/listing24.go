@@ -69,5 +69,5 @@ func (r * Runner1) gotInerrupt() bool {
 		return false
 	}
 
-	return nil;
+	return false;
 }
