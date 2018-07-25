@@ -37,10 +37,18 @@ func (r *Runner1) Add(tasks ...func(int)) {
 func (r *Runner1) Start() error {
 	signal.Notify(r.interrupt, os.Interrupt)
 
+	//complete接收 run 函数返回的error错误
 	go func() {
 		r.complete <- r.run()
 	}()
 
+	/**
+	select中的case语句必须是一个channel操作
+	select中的default子句总是可运行的。
+	如果有多个case都可以运行，select会随机公平地选出一个执行，其他不会执行。
+	如果没有可运行的case语句，且有default语句，那么就会执行default的动作。
+	如果没有可运行的case语句，且没有default语句，select将阻塞，直到某个case通信可以运行
+	 */
 	select {
 	case err := <-r.complete:
 		return err
